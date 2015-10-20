@@ -1,3 +1,7 @@
+body {
+	font-family: monospace;
+}
+
 .container {
 	position: relative;
 	width: 900px;
@@ -6,22 +10,16 @@
 	background-color: #E4E4E4;
 }
 
-.mask {
-	z-index: 1;
+.spinButton {
 	position: absolute;
-	background-color: #E4E4E4;
-	width: 800px;
-	height: 250px;
-	margin: 50px;
-	opacity: 0;
-}
-
-.topMask {
-	top: -245px;
-}
-
-.bottomMask {
-	bottom: -257px;
+	bottom: -42px;
+	right: 0px;
+	background-color: #91F785;
+	padding: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	font-size: 20px;
+	cursor: pointer;
 }
 
 .spinBoxContainer {
@@ -37,7 +35,7 @@
 	border-left: 1px solid #989898;
 	border-right: 1px solid #989898;
 	display: inline-block;
-	width: 250px;
+	width: 249px;
 	margin: 5px;
 	overflow: hidden;
 	top: -10px;

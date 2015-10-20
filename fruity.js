@@ -2,10 +2,20 @@ $(function() {
 
 
 	var reelStates = {};
+	var reelImageStates = {};
 
 	var reelImageClasses = ["reelImage1", "reelImage2", "reelImage3", "reelImage4", "reelImage5"];
 
 	var seenArray = [];
+
+	var spinActive = false;
+
+	$(".spinButton").click(function() {
+		if(!spinActive) {
+			spinActive = true;
+			startSpin();
+		}
+	});
 
 	function getReelImage(reset) {
 
@@ -31,54 +41,65 @@ $(function() {
 	function createReels(appendTo) {
 
 		reelStates[appendTo] = {};
+		reelImageStates[appendTo] = {};
 
 		var reel = $(".baseReel").clone();
 		reel.removeClass("baseReel");
 		reel.addClass("reelTopTop");
 		reel.addClass(appendTo + "Reel1");
-		reel.addClass(getReelImage(true));
+		var reelImage = getReelImage(true);
+		reel.addClass(reelImage);
 		reel.css("display", "block");
 		$("." + appendTo + "SpinBox").append(reel);
 
+		reelImageStates[appendTo][appendTo + "Reel1"] = reelImage;
 		reelStates[appendTo][appendTo + "Reel1"] = "toptop";
 
 		var reel = $(".baseReel").clone();
 		reel.removeClass("baseReel");
 		reel.addClass("reelTop")
 		reel.addClass(appendTo + "Reel2");
-		reel.addClass(getReelImage());
+		var reelImage = getReelImage();
+		reel.addClass(reelImage);
 		reel.css("display", "block");
 		$("." + appendTo + "SpinBox").append(reel);
 
+		reelImageStates[appendTo][appendTo + "Reel2"] = reelImage;
 		reelStates[appendTo][appendTo + "Reel2"] = "top";
 
 		var reel = $(".baseReel").clone();
 		reel.removeClass("baseReel");
 		reel.addClass(appendTo + "Reel3");
-		reel.addClass(getReelImage());
+		var reelImage = getReelImage();
+		reel.addClass(reelImage);
 		reel.css("display", "block");
 		$("." + appendTo + "SpinBox").append(reel);
 
+		reelImageStates[appendTo][appendTo + "Reel3"] = reelImage;
 		reelStates[appendTo][appendTo + "Reel3"] = "middle";
 
 		var reel = $(".baseReel").clone();
 		reel.removeClass("baseReel");
 		reel.addClass("reelBottom");
 		reel.addClass(appendTo + "Reel4");
-		reel.addClass(getReelImage());
+		var reelImage = getReelImage();
+		reel.addClass(reelImage);
 		reel.css("display", "block");
 		$("." + appendTo + "SpinBox").append(reel);
 
+		reelImageStates[appendTo][appendTo + "Reel4"] = reelImage;
 		reelStates[appendTo][appendTo + "Reel4"] = "bottom";
 
 		var reel = $(".baseReel").clone();
 		reel.removeClass("baseReel");
 		reel.addClass("reelBottomBottom");
 		reel.addClass(appendTo + "Reel5");
-		reel.addClass(getReelImage());
+		var reelImage = getReelImage();
+		reel.addClass(reelImage);
 		reel.css("display", "block");
 		$("." + appendTo + "SpinBox").append(reel);
 
+		reelImageStates[appendTo][appendTo + "Reel5"] = reelImage;
 		reelStates[appendTo][appendTo + "Reel5"] = "bottombottom";
 
 	}
@@ -122,10 +143,14 @@ $(function() {
 
 		var reelSpeed = 270,
 		transitionSpeed = "0.25s",
-		spinCount = 0;
-		leftSpinMax = 10;
-		midSpinMax = leftSpinMax + 1;
-		rightSpinMax = midSpinMax + 1;
+		spinCount = 0,
+		maxSpins = 15,
+		minSpins = 9,
+		leftSpinMax = Math.floor(Math.random() * (maxSpins - minSpins + 1)) + minSpins;
+		midSpinMax = Math.floor(Math.random() * (maxSpins - minSpins + 1)) + minSpins;
+		rightSpinMax = Math.floor(Math.random() * (maxSpins - minSpins + 1)) + minSpins;
+		totalMax = Math.max(leftSpinMax, midSpinMax, rightSpinMax);
+
 
 		function spin() {
 			window.setTimeout(function() {
@@ -135,9 +160,9 @@ $(function() {
 				
 				spinCount++;
 
-				if(spinCount < rightSpinMax) {
+				if(spinCount < totalMax) {
 					spin();
-				} else if(spinCount == rightSpinMax) {
+				} else if(spinCount == totalMax) {
 					spinFinished();
 				}
 			},reelSpeed);
@@ -147,9 +172,24 @@ $(function() {
 
 
 	}
-	startSpin();
+	//startSpin();
 
 	function spinFinished() {
+		var leftClass = getClassByState("left", "middle"),
+		middleClass = getClassByState("mid", "middle"),
+		rightClass = getClassByState("right", "middle");
+
+		var leftImage = reelImageStates["left"][leftClass],
+		middleImage = reelImageStates["mid"][middleClass],
+		rightImage = reelImageStates["right"][rightClass];
+
+		spinActive = false;
+
+		if(leftImage == middleImage == rightImage) {
+			alert("Three reel win!");
+		} else if(leftImage == middleImage) {
+			alert("Two reel win!");
+		}
 	}
 
 
