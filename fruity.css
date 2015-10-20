@@ -1,0 +1,95 @@
+.container {
+	position: relative;
+	width: 900px;
+	height: 350px;
+	margin: 250px auto;
+	background-color: #E4E4E4;
+}
+
+.mask {
+	z-index: 1;
+	position: absolute;
+	background-color: #E4E4E4;
+	width: 800px;
+	height: 250px;
+	margin: 50px;
+	opacity: 0;
+}
+
+.topMask {
+	top: -245px;
+}
+
+.bottomMask {
+	bottom: -257px;
+}
+
+.spinBoxContainer {
+	position: absolute;
+	margin: 50px;
+	width: 800px;
+	height: 251px;
+	overflow: hidden;
+}
+
+.spinBox {
+	height: 250px;
+	border-left: 1px solid #989898;
+	border-right: 1px solid #989898;
+	display: inline-block;
+	width: 250px;
+	margin: 5px;
+	overflow: hidden;
+	top: -10px;
+	position: relative;
+}
+
+
+.reel {
+	z-index: 0;
+	position: absolute;
+	display: none;
+	top: 6px;
+	width: 250px;
+	height: 250px;
+	background-size: 250px auto;
+	background-repeat: no-repeat;
+	transition: top 0.25s linear;
+}
+
+.reelImage1 {
+	background-image: url("dogsface.jpg");
+}
+
+.reelImage2 {
+	background-image: url("dogsface2.jpg");
+}
+
+.reelImage3 {
+	background-image: url("dogsface3.jpg");
+}
+
+.reelImage4 {
+	background-image: url("dogsface4.jpg");
+}
+
+.reelImage5 {
+	background-image: url("dogsface5.jpg");
+}
+
+
+.reelTopTop {
+	top: -495px;
+}
+
+.reelTop {
+	top: -245px;
+}
+
+.reelBottom {
+	top: 257px;
+}
+
+.reelBottomBottom {
+	top: 507px;
+}
