@@ -10,10 +10,15 @@ $(function() {
 
 	var spinActive = false;
 
+	var twoReelWinOdds = 100;
+	var threeReelWinOdds = 1;
+	var tensionOdds = 50;
+
 	$(".spinButton").click(function() {
 		if(!spinActive) {
 			spinActive = true;
-			startSpin();
+			//startSpin();
+			startFixedSpin();
 		}
 	});
 
@@ -168,24 +173,110 @@ $(function() {
 			},reelSpeed);
 		}
 		spin();
+	}
 
+	function startFixedSpin() {
 
+		var reelSpeed = 220,
+		winLine = calculateWinLine(),
+		transitionSpeed = "0.25s",
+		spinCount = 0,
+		maxSpins = 10,
+		leftFinished = false,
+		middleFinished = false,
+		rightFinished = false;
 
+		function spin() {
+			window.setTimeout(function() {
+				if(!leftFinished) spinReel("left", transitionSpeed);
+				if(!middleFinished) spinReel("mid", transitionSpeed);
+				if(!rightFinished) spinReel("right", transitionSpeed);
+				
+				if(spinCount < maxSpins) {
+					spin();
+					spinCount++;
+				} else if(!rightFinished){
+					if(getCurrentReelImage("left") == winLine[0] && !leftFinished) {
+						leftFinished = true;
+					} else if(getCurrentReelImage("mid") == winLine[1] && !middleFinished && leftFinished) {
+						middleFinished = true;
+					} else if(getCurrentReelImage("right") == winLine[2] && middleFinished && leftFinished) {
+						if(winLine[3]) {
+							maxSpins = Math.floor(Math.random() * (20 - 12 + 1)) + 12;
+							winLine[3] = false;
+						} else {
+							rightFinished = true;
+						}
+					}
+					spin();
+				} else {
+					spinFinished();
+				}
+
+			},reelSpeed);
+		}
+		spin();
+
+	}
+
+	function calculateWinLine() {
+
+		twoReelWinOdds = parseInt($(".twoReelChanceInput").val());
+		threeReelWinOdds = parseInt($(".threeReelChanceInput").val());
+		tensionOdds = parseInt($(".tensionReelChanceInput").val());
+		//Right parameter is tension 
+		var randomValForOdds = Math.floor(Math.random() * (100 - 0 + 1));
+
+		var randomValForTension = Math.floor(Math.random() * (100 - 0 + 1));
+
+		var addTension = (randomValForTension < tensionOdds);
+
+		var winLine = [];
+
+		var winningClass = reelImageClasses[(Math.floor(Math.random()*reelImageClasses.length + 1)) - 1];
+
+		winLine.push(winningClass);
+
+		function getRandomClass() {
+			var found = false,
+			theClass;
+
+			while(!found) {
+				var aClass = reelImageClasses[(Math.floor(Math.random()*reelImageClasses.length + 1)) - 1];
+				if(winLine.indexOf(aClass) == -1) {
+					found = true;
+					theClass = aClass;
+				}
+			}
+
+			return theClass;
+		}
+
+		if(randomValForOdds < threeReelWinOdds) {
+			winLine = winLine.concat([winningClass, winningClass, addTension]);
+		} else if(randomValForOdds < twoReelWinOdds) {
+			winLine = winLine.concat([winningClass, getRandomClass(), addTension])
+		} else {
+			winLine = winLine.concat(getRandomClass(), getRandomClass(), false);
+		}
+
+		return winLine;
+	}
+
+	function getCurrentReelImage(reel) {
+		var theClass = getClassByState(reel, "middle");
+		return reelImageStates[reel][theClass];
 	}
 	//startSpin();
 
 	function spinFinished() {
-		var leftClass = getClassByState("left", "middle"),
-		middleClass = getClassByState("mid", "middle"),
-		rightClass = getClassByState("right", "middle");
-
-		var leftImage = reelImageStates["left"][leftClass],
-		middleImage = reelImageStates["mid"][middleClass],
-		rightImage = reelImageStates["right"][rightClass];
-
 		spinActive = false;
 
-		if(leftImage == middleImage == rightImage) {
+		var leftImage = getCurrentReelImage("left"),
+		middleImage = getCurrentReelImage("mid"),
+		rightImage = getCurrentReelImage("right");
+
+		if(leftImage == middleImage && middleImage == rightImage) {
 			alert("Three reel win!");
 		} else if(leftImage == middleImage) {
 			alert("Two reel win!");

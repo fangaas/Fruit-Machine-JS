@@ -52,7 +52,7 @@ body {
 	height: 250px;
 	background-size: 250px auto;
 	background-repeat: no-repeat;
-	transition: top 0.25s linear;
+	transition: top 0.2s linear;
 }
 
 .reelImage1 {
@@ -90,4 +90,13 @@ body {
 
 .reelBottomBottom {
 	top: 507px;
+}
+
+.controls {
+	position: absolute;
+	top: -150px;
+}
+
+.chanceInput {	
+	width: 60px;
 }
